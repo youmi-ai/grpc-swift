@@ -85,6 +85,8 @@ extension Target.Dependency {
   static let echoModel: Self = .target(name: "EchoModel")
   static let echoImplementation: Self = .target(name: "EchoImplementation")
   static let helloWorldModel: Self = .target(name: "HelloWorldModel")
+  static let youmiRPCModelLongevityExt: Self = .target(name: "YoumiRPCModelLongevityExt")
+  static let youmiRPCModelSys: Self = .target(name: "YoumiRPCModelSys")
   static let routeGuideModel: Self = .target(name: "RouteGuideModel")
   static let interopTestModels: Self = .target(name: "GRPCInteroperabilityTestModels")
   static let interopTestImplementation: Self =
@@ -335,6 +337,27 @@ extension Target {
     ]
   )
 
+  static let youmiRPCModelLongevityExt: Target = .target(
+    name: "YoumiRPCModelLongevityExt",
+    dependencies: [
+      .grpc,
+      .nio,
+      .protobuf,
+      .youmiRPCModelSys,
+    ],
+    path: "Sources/YoumiRPCall/Model/longevityext"
+  )
+
+  static let youmiRPCModelSys: Target = .target(
+    name: "YoumiRPCModelSys",
+    dependencies: [
+      .grpc,
+      .nio,
+      .protobuf,
+    ],
+    path: "Sources/YoumiRPCall/Model/sys"
+  )
+
   static let helloWorldClient: Target = .executableTarget(
     name: "HelloWorldClient",
     dependencies: [
@@ -345,6 +368,19 @@ extension Target {
       .argumentParser,
     ],
     path: "Sources/Examples/HelloWorld/Client"
+  )
+
+  static let youmiRPCallClient: Target = .executableTarget(
+    name: "YoumiRPCallClient",
+    dependencies: [
+      .grpc,
+      .youmiRPCModelLongevityExt,
+      .youmiRPCModelSys,
+      .nioCore,
+      .nioPosix,
+      .argumentParser,
+    ],
+    path: "Sources/YoumiRPCall/Client"
   )
 
   static let helloWorldServer: Target = .executableTarget(
@@ -471,6 +507,9 @@ let package = Package(
     .echo,
     .helloWorldModel,
     .helloWorldClient,
+    .youmiRPCModelLongevityExt,
+    .youmiRPCModelSys,
+    .youmiRPCallClient,
     .helloWorldServer,
     .routeGuideModel,
     .routeGuideClient,
